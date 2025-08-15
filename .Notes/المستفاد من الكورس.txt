@@ -1,0 +1,6 @@
+1- ممكن تستخدم اي خط في اي, عن طريق ال import للخط الصفحة دي مش لازم في ال layout الرئيسية
+2- كل ال components بيتم انشاءها في ال server side الاول
+3- (Error Handling) صفحة الخطأ
+4- Image Component
+5- العنوان والديسكريبشن في اي صفحة (metadata) مش بس في ال rootlayout
+6- 

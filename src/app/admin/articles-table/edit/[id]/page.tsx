@@ -1,0 +1,32 @@
+import { getSingleArticle } from "@/apiCalls/articleApiCalls";
+import { Article } from "@prisma/client";
+import EditArticleForm from "./EditArticleFrom";
+import { verifyTokenForPage } from "@/utils/token";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+interface EditArticlePageProps {
+  params: Promise<{ id: string }>;
+}
+
+const EditArticlePage = async ({ params }: EditArticlePageProps) => {
+  const id = (await params).id
+  const token = await verifyTokenForPage(
+    (await cookies()).get("token")?.value ?? ""
+  );
+  if (!token || !token.isAdmin) redirect("/");
+  const article: Article = await getSingleArticle(id);
+
+  return (
+    <section className="fix-height flex items-center justify-center px-5 lg:px-20">
+      <div className="shadow p-4 bg-purple-200 rounded w-full">
+        <h2 className="text-2xl text-green-700 font-semibold mb-4">
+          Edit Article
+        </h2>
+        <EditArticleForm article={article} />
+      </div>
+    </section>
+  );
+};
+
+export default EditArticlePage;
