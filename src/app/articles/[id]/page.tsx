@@ -4,18 +4,20 @@ import CommentItem from "@/components/application/comments/CommentItem";
 import { verifyTokenForPage } from "@/utils/token";
 import { SingleArticle } from "@/utils/types";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 interface SingleArticlePageProps {
   params: Promise<{ id: string }>;
 }
 
 const SingleArticlePage = async ({ params }: SingleArticlePageProps) => {
-
   const token = await verifyTokenForPage(
     (await cookies()).get("token")?.value || ""
   );
 
   const article: SingleArticle = await getSingleArticle((await params).id);
+
+  if (!article) return redirect("/not-found");
 
   return (
     <section className="fix-height container m-auto w-full px-5 pt-8 md:w-3/4">

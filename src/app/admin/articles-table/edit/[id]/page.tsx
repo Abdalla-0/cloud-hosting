@@ -1,9 +1,6 @@
 import { getSingleArticle } from "@/apiCalls/articleApiCalls";
 import { Article } from "@prisma/client";
 import EditArticleForm from "./EditArticleFrom";
-import { verifyTokenForPage } from "@/utils/token";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 interface EditArticlePageProps {
   params: Promise<{ id: string }>;
@@ -11,10 +8,6 @@ interface EditArticlePageProps {
 
 const EditArticlePage = async ({ params }: EditArticlePageProps) => {
   const id = (await params).id
-  const token = await verifyTokenForPage(
-    (await cookies()).get("token")?.value ?? ""
-  );
-  if (!token || !token.isAdmin) redirect("/");
   const article: Article = await getSingleArticle(id);
 
   return (

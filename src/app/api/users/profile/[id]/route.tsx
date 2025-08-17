@@ -30,10 +30,6 @@ export async function DELETE(request: NextRequest, { params }: Props) {
 
     const userFromToken = verifyToken(request);
     if (userFromToken !== null && userFromToken.id === user.id) {
-      const commentIds = user?.comments.map((comment) => comment.id);
-      await prisma.comment.deleteMany({
-        where: { id: { in: commentIds } },
-      });
       await prisma.user.delete({
         where: { id: Number(id) },
       });
@@ -117,11 +113,10 @@ export async function PUT(request: NextRequest, { params }: Props) {
     const userFromToken = verifyToken(request);
 
     if (userFromToken !== null && userFromToken.id === user.id) {
-
       const reqBody = (await request.json()) as UpdateUserDto;
 
       const validation = updateUserSchema.safeParse(reqBody);
-      
+
       if (!validation.success) {
         return NextResponse.json(
           {

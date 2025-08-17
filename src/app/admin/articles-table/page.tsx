@@ -1,22 +1,15 @@
 import { getArticles } from "@/apiCalls/articleApiCalls";
 import Pagination from "@/components/application/articles/Pagination";
 import { ARTICLE_PER_PAGE } from "@/utils/constants";
-import { verifyTokenForPage } from "@/utils/token";
-import { cookies } from "next/headers";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import DeleteArticleButton from "./DeleteArticleButton";
 import { prisma } from "@/utils/db";
+import Link from "next/link";
+import DeleteArticleButton from "./DeleteArticleButton";
 interface AdminAricleTableProps {
   searchParams: Promise<{ pageNumber: string }>;
 }
 
 const AdminAricleTable = async ({ searchParams }: AdminAricleTableProps) => {
   const pageNumber = (await searchParams).pageNumber || "1";
-  const token = await verifyTokenForPage(
-    (await cookies()).get("token")?.value ?? ""
-  );
-  if (!token || !token.isAdmin) redirect("/");
   const articles = await getArticles(pageNumber);
   const count = await prisma.article.count();
   const pagesCount = Math.ceil(count / ARTICLE_PER_PAGE);

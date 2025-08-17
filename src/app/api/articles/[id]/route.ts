@@ -129,13 +129,11 @@ export async function DELETE(request: NextRequest, props: Props) {
         { status: 404 }
       );
     }
+    // delete the article
     await prisma.article.delete({
       where: { id: Number(id) },
     });
-    const commentIds = article.comments.map((comment) => comment.id);
-    await prisma.comment.deleteMany({
-      where: { id: { in: commentIds } },
-    });
+
     return NextResponse.json(
       { message: "Article deleted successfully" },
       { status: 200 }
